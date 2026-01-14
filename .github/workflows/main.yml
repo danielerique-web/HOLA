@@ -1,0 +1,25 @@
+name: Compilar a EXE
+on: [push] # Se activa cada vez que subes algo
+
+jobs:
+  build:
+    runs-on: windows-latest # Aquí pedimos una PC con Windows
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Instalar PyInstaller
+      run: pip install pyinstaller
+
+    - name: Crear Ejecutable
+      run: pyinstaller --noconsole --onefile main.py
+
+    - name: Guardar el archivo final
+      uses: actions/upload-artifact@v3
+      with:
+        name: FundilloWindowsEXE # Nombre del paquete
+        path: dist/main.exe      # Ruta donde PyInstaller guarda el .exe
