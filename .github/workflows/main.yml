@@ -1,25 +1,29 @@
 name: Compilar a EXE
-on: [push] # Se activa cada vez que subes algo
+on: [push, workflow_dispatch]
 
 jobs:
   build:
-    runs-on: windows-latest # Aquí pedimos una PC con Windows
+    runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - name: Descargar codigo
+      uses: actions/checkout@v4
 
     - name: Configurar Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.10'
+        python-version: '3.11'
 
     - name: Instalar PyInstaller
-      run: pip install pyinstaller
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
 
     - name: Crear Ejecutable
-      run: pyinstaller --noconsole --onefile main.py
+      run: |
+        python -m PyInstaller --noconsole --onefile --name="Actualizacion_Sistema" main.py
 
-    - name: Guardar el archivo final
-      uses: actions/upload-artifact@v3
+    - name: Subir Archivo Final
+      uses: actions/upload-artifact@v4
       with:
-        name: FundilloWindowsEXE # Nombre del paquete
-        path: dist/main.exe      # Ruta donde PyInstaller guarda el .exe
+        name: FundilloWindowsEXE
+        path: dist/Actualizacion_Sistema.exe
